@@ -17,11 +17,15 @@ public class Util {
 	public static String pre = "[HideLogin] ";	
 	public static Configuration config;
 	public static ChatColor cyellow = ChatColor.YELLOW;
+	public static ChatColor cgreen = ChatColor.GREEN;
+	public static ChatColor cred = ChatColor.RED;
+	public static boolean hideAll = false;
 	
 	public static void load(HideLogin plugin) {
 		config = plugin.getConfiguration();
 		try
 		{
+			hideAll = config.getBoolean("config.hideall", hideAll);
 			hiddenPlayers = (ArrayList<String>) config.getProperty("hiddenplayers");
 			if(hiddenPlayers == null)
 			{
@@ -39,6 +43,7 @@ public class Util {
 	
 	public static void saveAll() {
 		config.setProperty("hiddenplayers", hiddenPlayers);
+		config.setProperty("config.hideall", hideAll);
 		config.save();
 		HideLogin.log.info(pre + "settings saved");
 	}

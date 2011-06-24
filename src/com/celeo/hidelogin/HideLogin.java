@@ -30,9 +30,14 @@ public class HideLogin extends JavaPlugin {
 		log.info("[HideLogin] <enabled>");
 	}
 	
+	public void checkAll(Player player) {
+		if(Util.hideAll == true)
+			player.sendMessage(Util.cred + "Note: " + Util.cgreen + "Login messages are turned completely off");
+	}
+	
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		Player player = (Player)sender;
-		if(commandLabel.equalsIgnoreCase("hiddenlogins") && sender.isOp())
+		if(commandLabel.equalsIgnoreCase("hiddenlogins") && player.isOp())
 		{
 			String list = "";
 			for(String str : Util.hiddenPlayers)
@@ -43,20 +48,60 @@ public class HideLogin extends JavaPlugin {
 			player.sendMessage(ChatColor.AQUA + list);
 			return true;
 		}
-		if(commandLabel.equalsIgnoreCase("hideme") && sender.isOp())
+		if(commandLabel.equalsIgnoreCase("hideme") && player.isOp())
 		{
 			Util.hiddenPlayers.add(player.getDisplayName());
-			player.sendMessage("You have been added to the hidden login list");
+			player.sendMessage(Util.cgreen + "You have been added to the hidden login list");
+			checkAll(player);
 			return true;
 		}
-		if(commandLabel.equalsIgnoreCase("showme") && sender.isOp())
+		if(commandLabel.equalsIgnoreCase("showme") && player.isOp())
 		{
 			if(Util.hiddenPlayers.contains(player.getDisplayName()))
 			{
 				Util.hiddenPlayers.remove(player.getDisplayName());
-				player.sendMessage("You have been removed from the hidden login list");
+				player.sendMessage(Util.cgreen + "You have been removed from the hidden login list");
+				checkAll(player);
+			}
+			else
+			{
+				player.sendMessage(Util.cgreen + "Your login was not being hidden");
+				checkAll(player);
 			}
 			return true;
+		}
+		if(commandLabel.equalsIgnoreCase("togglelogins") && player.isOp())
+		{
+			if(args.length >= 1)
+			{
+				if(args[0].equalsIgnoreCase("on"))
+				{
+					Util.hideAll = true;
+					player.sendMessage(Util.pre + Util.cgreen + "login messages set to on");
+				}
+				else if(args[0].equalsIgnoreCase("off"))
+				{
+					Util.hideAll = false;
+					player.sendMessage(Util.pre + Util.cgreen + "login messages set to off");
+				}
+				else
+				{
+					return false;
+				}
+			}
+			else
+			{
+				if(Util.hideAll == true)
+				{
+					Util.hideAll = false;
+					player.sendMessage(Util.pre + Util.cgreen + "login messages set to on");
+				}
+				else
+				{
+					Util.hideAll = true;
+					player.sendMessage(Util.pre + Util.cgreen + "login messages set to off");
+				}
+			}
 		}
 		return true;
 	}

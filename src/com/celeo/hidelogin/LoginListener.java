@@ -15,30 +15,37 @@ public class LoginListener extends PlayerListener {
 	}
 	
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		if(Util.hiddenPlayers != null)
+		if(Util.hideAll == true)
 		{
-			if(Util.hiddenPlayers.contains(event.getPlayer().getDisplayName()))
+			event.setJoinMessage(null);
+		}
+		else
+		{
+			if(Util.hiddenPlayers != null)
 			{
-				event.setJoinMessage(null);
-			}
-			else
-			{
-				event.setJoinMessage(null);
-				Player[] onlinePlayers = event.getPlayer().getServer().getOnlinePlayers();
-				ArrayList<Player> displayNames = new ArrayList<Player>();
-				for(int i = 0; i < onlinePlayers.length; i++)
+				if(Util.hiddenPlayers.contains(event.getPlayer().getDisplayName()))
 				{
-					if(onlinePlayers[i] != event.getPlayer())
+					event.setJoinMessage(null);
+				}
+				else
+				{
+					event.setJoinMessage(null);
+					Player[] onlinePlayers = event.getPlayer().getServer().getOnlinePlayers();
+					ArrayList<Player> displayNames = new ArrayList<Player>();
+					for(int i = 0; i < onlinePlayers.length; i++)
 					{
-						displayNames.add(onlinePlayers[i]);
+						if(onlinePlayers[i] != event.getPlayer())
+						{
+							displayNames.add(onlinePlayers[i]);
+						}
+					}
+					for(Player p : displayNames)
+					{
+						p.sendMessage(Util.cyellow + event.getPlayer().getDisplayName() + " has logged in.");
 					}
 				}
-				for(Player p : displayNames)
-				{
-					p.sendMessage(Util.cyellow + event.getPlayer().getDisplayName() + " has logged in.");
-				}
 			}
-		}
+		}		
 	}
 	
 }
