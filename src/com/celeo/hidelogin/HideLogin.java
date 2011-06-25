@@ -8,11 +8,16 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
+import com.nijiko.permissions.PermissionHandler;
+import com.nijikokun.bukkit.Permissions.Permissions;
+import org.bukkit.plugin.Plugin;
+
 import java.util.logging.Logger;
 
 public class HideLogin extends JavaPlugin {
 	
 	public static final Logger log = Logger.getLogger("Minecraft");
+	public static PermissionHandler Permissions;
 	
 	public LoginListener loginListener = new LoginListener(this);
 	
@@ -21,7 +26,23 @@ public class HideLogin extends JavaPlugin {
 		Util.saveAll();
 		log.info("[HideLogin] <disabled>");
 	}
-
+	
+	public void setupPermissions() {
+		Plugin test = getServer().getPluginManager().getPlugin("Permissions");
+		if (Permissions == null)
+		{
+			if (test != null)
+			{
+				getServer().getPluginManager().enablePlugin(test);
+				Permissions = ((Permissions)test).getHandler();
+			}
+			else
+			{
+				log.info(Util.pre + "uses Permissions, defaulting to OP");
+			}
+		}
+	}
+	
 	@Override
 	public void onEnable() {
 		Util.load(this);
@@ -35,9 +56,26 @@ public class HideLogin extends JavaPlugin {
 			player.sendMessage(Util.cred + "Note: " + Util.cgreen + "Login messages are turned completely off");
 	}
 	
+	public static boolean canDo(Player player) {
+		if(Permissions != null)
+		{
+			if(Permissions.has(player, "hidelogin.use"))
+				return true;
+			else
+				return false;
+		}
+		else
+		{
+			if(player.isOp())
+				return true;
+			else
+				return false;
+		}
+	}
+	
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		Player player = (Player)sender;
-		if(commandLabel.equalsIgnoreCase("hiddenlogins") && player.isOp())
+		if(commandLabel.equalsIgnoreCase("hiddenlogins") && canDo(player))
 		{
 			String list = "";
 			for(String str : Util.hiddenPlayers)
@@ -48,14 +86,14 @@ public class HideLogin extends JavaPlugin {
 			player.sendMessage(ChatColor.AQUA + list);
 			return true;
 		}
-		if(commandLabel.equalsIgnoreCase("hideme") && player.isOp())
+		if(commandLabel.equalsIgnoreCase("hideme") && canDo(player))
 		{
 			Util.hiddenPlayers.add(player.getDisplayName());
 			player.sendMessage(Util.cgreen + "You have been added to the hidden login list");
 			checkAll(player);
 			return true;
 		}
-		if(commandLabel.equalsIgnoreCase("showme") && player.isOp())
+		if(commandLabel.equalsIgnoreCase("showme") && canDo(player))
 		{
 			if(Util.hiddenPlayers.contains(player.getDisplayName()))
 			{
@@ -70,7 +108,7 @@ public class HideLogin extends JavaPlugin {
 			}
 			return true;
 		}
-		if(commandLabel.equalsIgnoreCase("togglelogins") && player.isOp())
+		if(commandLabel.equalsIgnoreCase("togglelogins") && canDo(player))
 		{
 			if(args.length >= 1)
 			{
