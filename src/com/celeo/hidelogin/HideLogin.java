@@ -20,6 +20,7 @@ public class HideLogin extends JavaPlugin {
 	public static PermissionHandler Permissions;
 	
 	public LoginListener loginListener = new LoginListener(this);
+	public LogoutListener lougoutListener = new LogoutListener(this);
 	
 	@Override
 	public void onDisable() {
@@ -48,6 +49,7 @@ public class HideLogin extends JavaPlugin {
 		Util.load(this);
 		PluginManager mngr = getServer().getPluginManager();
 		mngr.registerEvent(Event.Type.PLAYER_JOIN, this.loginListener, Event.Priority.Normal, this);
+		mngr.registerEvent(Event.Type.PLAYER_QUIT, this.lougoutListener, Event.Priority.Normal, this);
 		log.info("[HideLogin] <enabled>");
 	}
 	
@@ -56,10 +58,10 @@ public class HideLogin extends JavaPlugin {
 			player.sendMessage(Util.cred + "Note: " + Util.cgreen + "Login messages are turned completely off");
 	}
 	
-	public static boolean canDo(Player player) {
+	public static boolean canDo(Player player, String node) {
 		if(Permissions != null)
 		{
-			if(Permissions.has(player, "hidelogin.use"))
+			if(Permissions.has(player, node))
 				return true;
 			else
 				return false;
@@ -75,30 +77,30 @@ public class HideLogin extends JavaPlugin {
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		Player player = (Player)sender;
-		if(commandLabel.equalsIgnoreCase("hiddenlogins") && canDo(player))
+		if(commandLabel.equalsIgnoreCase("hiddenlogs") && canDo(player, "hidden.show"))
 		{
 			String list = "";
 			for(String str : Util.hiddenPlayers)
 			{
 				list += str + " ";
 			}
-			player.sendMessage(ChatColor.AQUA + "Players who hide their logins:");
+			player.sendMessage(ChatColor.AQUA + "Players who hide their logins/outs:");
 			player.sendMessage(ChatColor.AQUA + list);
 			return true;
 		}
-		if(commandLabel.equalsIgnoreCase("hideme") && canDo(player))
+		if(commandLabel.equalsIgnoreCase("hideme") && canDo(player, "hidden.hideme"))
 		{
 			Util.hiddenPlayers.add(player.getDisplayName());
-			player.sendMessage(Util.cgreen + "You have been added to the hidden login list");
+			player.sendMessage(Util.cgreen + "You have been added to the hidden login/out list");
 			checkAll(player);
 			return true;
 		}
-		if(commandLabel.equalsIgnoreCase("showme") && canDo(player))
+		if(commandLabel.equalsIgnoreCase("showme") && canDo(player, "hidden.hideme"))
 		{
 			if(Util.hiddenPlayers.contains(player.getDisplayName()))
 			{
 				Util.hiddenPlayers.remove(player.getDisplayName());
-				player.sendMessage(Util.cgreen + "You have been removed from the hidden login list");
+				player.sendMessage(Util.cgreen + "You have been removed from the hidden login/out list");
 				checkAll(player);
 			}
 			else
@@ -108,19 +110,19 @@ public class HideLogin extends JavaPlugin {
 			}
 			return true;
 		}
-		if(commandLabel.equalsIgnoreCase("togglelogins") && canDo(player))
+		if(commandLabel.equalsIgnoreCase("togglelogs") && canDo(player, "hidden.toggle"))
 		{
 			if(args.length >= 1)
 			{
 				if(args[0].equalsIgnoreCase("on"))
 				{
 					Util.hideAll = true;
-					player.sendMessage(Util.pre + Util.cgreen + "login messages set to on");
+					player.sendMessage(Util.cgreen + "Login/out messages set to on");
 				}
 				else if(args[0].equalsIgnoreCase("off"))
 				{
 					Util.hideAll = false;
-					player.sendMessage(Util.pre + Util.cgreen + "login messages set to off");
+					player.sendMessage(Util.cgreen + "Login/out messages set to off");
 				}
 				else
 				{
@@ -132,13 +134,41 @@ public class HideLogin extends JavaPlugin {
 				if(Util.hideAll == true)
 				{
 					Util.hideAll = false;
-					player.sendMessage(Util.pre + Util.cgreen + "login messages set to on");
+					player.sendMessage(Util.cgreen + "Login/out messages set to on");
 				}
 				else
 				{
 					Util.hideAll = true;
-					player.sendMessage(Util.pre + Util.cgreen + "login messages set to off");
+					player.sendMessage(Util.cgreen + "Login/out messages set to off");
 				}
+			}
+		}
+		if(commandLabel.equalsIgnoreCase("hidemessages") && canDo(player, "hidden.messages"))
+		{
+			if(Util.noMessages != null)
+			{
+				if(Util.noMessages.contains(player.getDisplayName()))
+				{
+					player.sendMessage(Util.cred + "You are already blocking others' login/out messages");
+				}
+				else
+				{
+					Util.noMessages.add(player.getDisplayName());
+					player.sendMessage(Util.cgreen + "You will no longer receive login/out messages");
+				}
+			}
+		}
+		if(commandLabel.equalsIgnoreCase("showmessages") && canDo(player, "hidden.messages"))
+		{
+			if(Util.noMessages != null)
+			{
+				if(Util.noMessages.contains(player.getDisplayName()) == true)
+				{
+					Util.noMessages.remove(player.getDisplayName());
+					player.sendMessage(Util.cgreen + "You will now receive login/out messages");
+				}
+				else
+					player.sendMessage(Util.cred + "You are already viewing others' login/out messages");
 			}
 		}
 		return true;

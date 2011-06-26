@@ -1,18 +1,24 @@
 name: HideLogin
 main: com.celeo.hidelogin.HideLogin
 author: Celeo
-version: 1.3
+version: 1.5
 description: Plugin for hiding people's login messages
 commands:
-  hiddenlogins:
-    description: Checks who is hiding their logins
-    usage: /<command> (Must be OP)
+  hiddenlogs:
+    description: Checks who is hiding their logins/out
+    usage: /<command>
   hideme:
-    description: Adds you to hidden login list
-    usage: /<command> (Must be OP)
+    description: Adds you to hidden login/out list
+    usage: /<command>
   showme:
-    description: Removes you from the hidden login list
-    usage: /<command> (Must be OP)
-  togglelogins:
-    description: Removes all login messages
+    description: Removes you from the hidden login/out list
+    usage: /<command>
+  togglelogs:
+    description: Removes all login/out messages
     usage: /<command> [on/off]
+  hidemessages:
+    description: Blocks login/out messages from coming to you
+    usage: /<command>
+  showmessages:
+    description: Blocks login/out messages from coming to you
+    usage: /<command>

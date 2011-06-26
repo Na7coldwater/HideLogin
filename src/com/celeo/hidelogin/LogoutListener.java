@@ -3,24 +3,24 @@ package com.celeo.hidelogin;
 import java.util.ArrayList;
 
 import org.bukkit.Server;
-import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerListener;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.entity.Player;
 
-public class LoginListener extends PlayerListener {
+public class LogoutListener extends PlayerListener {
 	
 	public final HideLogin plugin;
 	
-	public LoginListener(HideLogin instance) {
+	public LogoutListener(HideLogin instance) {
 		plugin = instance;
 	}
 	
-	public void onPlayerJoin(PlayerJoinEvent event) {
+	public void onPlayerQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
 		Server server = player.getServer();
 		if(Util.hideAll == true)
 		{
-			event.setJoinMessage(null);
+			event.setQuitMessage(null);
 		}
 		else
 		{
@@ -28,11 +28,11 @@ public class LoginListener extends PlayerListener {
 			{
 				if(Util.hiddenPlayers.contains(player.getDisplayName()))
 				{
-					event.setJoinMessage(null);
+					event.setQuitMessage(null);
 				}
 				else
 				{
-					event.setJoinMessage(null);
+					event.setQuitMessage(null);
 					Player[] onlinePlayers = server.getOnlinePlayers();
 					ArrayList<Player> displayNames = new ArrayList<Player>();
 					for(int i = 0; i < onlinePlayers.length; i++)
@@ -45,11 +45,11 @@ public class LoginListener extends PlayerListener {
 					for(Player p : displayNames)
 					{
 						if(!Util.noMessages.contains(p.getDisplayName()))
-							p.sendMessage(Util.cyellow + player.getDisplayName() + " has logged in.");
+							p.sendMessage(Util.cyellow + player.getDisplayName() + " has logged out.");
 					}
 				}
 			}
-		}		
+		}	
 	}
 	
 }
