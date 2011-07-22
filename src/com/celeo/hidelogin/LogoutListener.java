@@ -42,14 +42,17 @@ public class LogoutListener extends PlayerListener {
 							displayNames.add(onlinePlayers[i]);
 						}
 					}
+					String m = Util.formatMessage(player.getDisplayName(), "out");
 					for(Player p : displayNames)
 					{
 						if(!Util.noMessages.contains(p.getDisplayName()))
-							p.sendMessage(Util.cyellow + player.getDisplayName() + " has logged out.");
+						{
+							p.sendMessage(Util.cyellow + m);
+						}
 					}
 				}
 			}
 		}	
 	}
-	
+
 }

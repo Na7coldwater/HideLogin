@@ -45,7 +45,9 @@ public class LoginListener extends PlayerListener {
 					for(Player p : displayNames)
 					{
 						if(!Util.noMessages.contains(p.getDisplayName()))
-							p.sendMessage(Util.cyellow + player.getDisplayName() + " has logged in.");
+						{
+							p.sendMessage(Util.cyellow + Util.formatMessage(player.getDisplayName(), "in"));
+						}
 					}
 				}
 			}

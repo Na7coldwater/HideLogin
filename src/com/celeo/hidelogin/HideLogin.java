@@ -12,11 +12,8 @@ import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
 import org.bukkit.plugin.Plugin;
 
-import java.util.logging.Logger;
-
 public class HideLogin extends JavaPlugin {
 	
-	public static final Logger log = Logger.getLogger("Minecraft");
 	public static PermissionHandler Permissions;
 	
 	public LoginListener loginListener = new LoginListener(this);
@@ -25,7 +22,7 @@ public class HideLogin extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		Util.saveAll();
-		log.info("[HideLogin] <disabled>");
+		Util.log.info("[HideLogin] <disabled>");
 	}
 	
 	public void setupPermissions() {
@@ -39,7 +36,7 @@ public class HideLogin extends JavaPlugin {
 			}
 			else
 			{
-				log.info(Util.pre + "uses Permissions, defaulting to OP");
+				Util.log.info(Util.pre + "uses Permissions, defaulting to OP");
 			}
 		}
 	}
@@ -50,7 +47,7 @@ public class HideLogin extends JavaPlugin {
 		PluginManager mngr = getServer().getPluginManager();
 		mngr.registerEvent(Event.Type.PLAYER_JOIN, this.loginListener, Event.Priority.Normal, this);
 		mngr.registerEvent(Event.Type.PLAYER_QUIT, this.lougoutListener, Event.Priority.Normal, this);
-		log.info("[HideLogin] <enabled>");
+		Util.log.info("[HideLogin] <enabled>");
 	}
 	
 	public void checkAll(Player player) {
