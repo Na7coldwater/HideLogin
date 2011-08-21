@@ -1,5 +1,7 @@
 package com.celeo.hidelogin;
 
+import java.util.ArrayList;
+
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.entity.Player;
@@ -139,6 +141,7 @@ public class HideLogin extends JavaPlugin {
 					player.sendMessage(Util.cgreen + "Login/out messages set to off");
 				}
 			}
+			return true;
 		}
 		if(commandLabel.equalsIgnoreCase("hidemessages") && canDo(player, "hidden.messages"))
 		{
@@ -154,6 +157,7 @@ public class HideLogin extends JavaPlugin {
 					player.sendMessage(Util.cgreen + "You will no longer receive login/out messages");
 				}
 			}
+			return true;
 		}
 		if(commandLabel.equalsIgnoreCase("showmessages") && canDo(player, "hidden.messages"))
 		{
@@ -168,7 +172,33 @@ public class HideLogin extends JavaPlugin {
 					player.sendMessage(Util.cred + "You are already viewing others' login/out messages");
 			}
 		}
-		return true;
+		if(commandLabel.equalsIgnoreCase("fakelog"))
+		{
+			if(canDo(player, "hidden.fakelog"))
+			{
+				Player[] onlinePlayers = player.getServer().getOnlinePlayers();
+				ArrayList<Player> displayNames = new ArrayList<Player>();
+				for(int i = 0; i < onlinePlayers.length; i++)
+				{
+					if(onlinePlayers[i] != player)
+					{
+						displayNames.add(onlinePlayers[i]);
+					}
+				}
+				String m = ChatColor.YELLOW + player.getDisplayName() + " has left the game.";
+				for(Player p : displayNames)
+				{
+					if(!Util.noMessages.contains(p.getDisplayName()))
+					{
+						p.sendMessage(Util.cyellow + m);
+					}
+				}
+			}
+			else
+				player.sendMessage(ChatColor.RED + "You do not have permission to use this command.");
+			return true;
+		}
+		return false;
 	}
 
 }
