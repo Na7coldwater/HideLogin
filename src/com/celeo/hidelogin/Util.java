@@ -6,25 +6,27 @@ import org.bukkit.util.config.Configuration;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
-public class Util {
+@SuppressWarnings("deprecation")
+public class Util
+{
 	
-	public final HideLogin plugin;
+	public final Core plugin;
 		
-	public Util(HideLogin instance) {
+	public Util(Core instance) 
+	{
 		plugin = instance;
 	}
 	
-	public static void load(HideLogin plugin) {
+	public static void load(Core plugin)
+	{
 		config = plugin.getConfiguration();
 		try
 		{
 			hideAll = config.getBoolean("hideall", hideAll);
 			logMessage = config.getString("logmessage");
 			if(logMessage == null || logMessage == "")
-			{
-				logMessage = "[A] has logged [B].";
-			}
-			hiddenPlayers = (ArrayList<String>) config.getKeys("hiddenplayers");
+				logMessage = "A has logged B.";
+			hiddenPlayers = (ArrayList<String>)config.getKeys("hiddenplayers");
 			if(hiddenPlayers == null)
 			{
 				hiddenPlayers = new ArrayList<String>();
@@ -45,15 +47,15 @@ public class Util {
 		saveAll();
 	}
 	
-	public static void saveAll() {
+	public static void saveAll()
+	{
 		config.setHeader("#	=== Config for HideLogin === #\n"
 				+ "#	hiddenplayers are the players who are hiding their messages\n"
 				+ "#	nomessages are people who don't want to see messages\n"
 				+ "#	hideall is if you want to stop messages altogether\n"
 				+ "#	log message is the message that gets displayed to people on login/logout\n"
-				+ "##		<White><Yellow><Red><Green> will be replaced with the respective color\n"
-				+ "##		[A] will be replaced by the name of the player\n"
-				+ "##		[B] will be replaced by the 'direction' of the log\n"
+				+ "##		A will be replaced by the name of the player\n"
+				+ "##		B will be replaced by the 'direction' of the log\n"
 				);
 		config.setProperty("hiddenplayers", hiddenPlayers);
 		config.setProperty("nomessages", noMessages);
@@ -63,16 +65,11 @@ public class Util {
 		log.info(pre + "settings saved");
 	}
 	
-	public static String formatMessage(String player, String mode) {
+	public static String formatMessage(String playerName, String mode)
+	{
 		String m = logMessage;
-		if(m.contains("[A]"))
-		{
-			m.replace("[A]", player);
-		}
-		if(m.contains("[B]"))
-		{
-			m.replace("[B]", mode);
-		}
+		m = m.replaceAll("A", playerName);
+		m = m.replaceAll("B", mode);
 		return m;
 	}
 	

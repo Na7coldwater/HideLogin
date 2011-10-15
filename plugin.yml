@@ -1,7 +1,7 @@
 name: HideLogin
-main: com.celeo.hidelogin.HideLogin
+main: com.celeo.hidelogin.Core
 author: Celeo
-version: 1.9
+version: 1.10
 description: Plugin for hiding people's login messages
 commands:
   hiddenlogs:
