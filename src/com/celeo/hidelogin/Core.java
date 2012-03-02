@@ -23,14 +23,13 @@ public class Core extends JavaPlugin
 	public void onEnable()
 	{
 		Util.load(this);
-		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_JOIN, this.playerListener, Event.Priority.Normal, this);
-		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_QUIT, this.playerListener, Event.Priority.Normal, this);
+                getServer().getPluginManager().registerEvents(playerListener, this);
 		Util.log.info("[HideLogin] <enabled>");
 	}
 	
 	public void onDisable()
 	{
-		Util.saveAll();
+		Util.saveAll(this);
 		Util.log.info("[HideLogin] <disabled>");
 	}
 	

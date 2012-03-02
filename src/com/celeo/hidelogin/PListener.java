@@ -4,11 +4,12 @@ import java.util.ArrayList;
 
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerListener;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-public class PListener extends PlayerListener
+public class PListener implements Listener
 {
 	
 	public final Core plugin;
@@ -18,6 +19,7 @@ public class PListener extends PlayerListener
 		plugin = instance;
 	}
 	
+        @EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) 
 	{
 		Player player = event.getPlayer();
@@ -50,6 +52,7 @@ public class PListener extends PlayerListener
 		}		
 	}
 	
+        @EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event)
 	{
 		Player player = event.getPlayer();
